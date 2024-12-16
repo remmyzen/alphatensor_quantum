@@ -21,6 +21,9 @@ array of shape `(num_decompositions, num_factors, tensor_size)`, where we report
 *at most* `num_decompositions = 10` non-equivalent decompositions (equivalence
 is determined solely based on factor permutations).
 
+Note that this repository does *not* contain the code to convert quantum
+circuits into binary tensors; this is provided in a separate repository,
+[Circuit-to-Tensor](https://github.com/tlaakkonen/circuit-to-tensor).
 
 ## Installation
 
