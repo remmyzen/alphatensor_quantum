@@ -14,6 +14,7 @@ from alphatensor_quantum.src.experiment import agent as agent_lib
 from alphatensor_quantum.src.experiment import config
 import pickle
 
+## Evaluation function
 def evaluation(configuration_evals, run_state, eval_type, max_qubit_size):
   ##Currently loop over environment with 1 circuit. 
   ##NOTE: could be optimized with vmap
@@ -44,7 +45,7 @@ def evaluation(configuration_evals, run_state, eval_type, max_qubit_size):
   return tcounts_eval
 
 ## Eval data filename
-eval_data_filename = 'eval-data-100-5-gadgets.p'
+eval_data_filename = 'eval-data-1000-5-gadgets.p'
 
 ## Model filename
 model_filename = 'runstate-general.p'
@@ -52,22 +53,23 @@ model_filename = 'runstate-general.p'
 ## Need to give max size to append the eval data
 max_qubit_size = 8
 
+## Evaluation type
 use_gadgets = True
 eval_type = 'greedy' 
-optimize_input_circuit = True
 
-## Open eval data
+## Open the evaluation data
 configuration_evals, tgate_baseline_evals, _ = pickle.load(open(eval_data_filename, 'rb'))
-          
-start = time.time()
 
+## Open the run state
 run_state_eval = pickle.load(open(model_filename, 'rb'))
+
+start = time.time()
 
 tcounts_eval = jnp.array(evaluation(configuration_evals, run_state_eval, eval_type, max_qubit_size))
 
+total_time = time.time() - start
+
 print(f'Average T-count for eval circuit: {jnp.mean(tcounts_eval)}, std: {jnp.std(tcounts_eval)}')
 print(f'Average baseline T-count for eval circuit: {jnp.mean(tgate_baseline_evals)}, std: {jnp.std(tgate_baseline_evals)}')
-
-total_time = time.time() - start
 print(f'Total evaluation time: {total_time}s')     
 print(f'Evaluation time per circuit:  {total_time / len(configuration_evals)}s')   

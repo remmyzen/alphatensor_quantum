@@ -10,15 +10,20 @@ import random
 np.random.seed(2024)
 random.seed(2024)
 
-num_eval_data = 100#0
+## Number of random circuits
+num_eval_data = 1000
+
+## Number of qubits
 num_qubits = 5
+
+## Use gadgets
 use_gadgets = True
 
 configuration_evals = []
 baseline_tgates_evals = []
 baseline_times_evals = []
 
-
+## Generate random circuits
 for ii in range(num_eval_data):
     if ii % 100 == 0:
         print(f'=== Generate eval data {ii}/{num_eval_data}')
@@ -27,7 +32,7 @@ for ii in range(num_eval_data):
         use_gadgets=use_gadgets, 
         num_data = 1,
         num_qubits = num_qubits,
-        todd_path = '/u/rzen/TOpt/bin/TOpt', ##TODO: Change with your TODD path
+        todd_path = '/TOpt/bin/TOpt', ##TODO: Change with your TODD path
     )
 
     configuration_evals.append(configuration_eval)
@@ -35,11 +40,12 @@ for ii in range(num_eval_data):
     baseline_times_evals.append(baseline_times[0])
 
 baseline_tgates_evals = np.array(baseline_tgates_evals)
+times_evals = jnp.array(baseline_times_evals)
+
 print(f'Mean gate: {jnp.mean(baseline_tgates_evals):.4f}, std: {jnp.std(baseline_tgates_evals):.4f}')
 print(f'Max gate: {jnp.max(baseline_tgates_evals):.4f}, std: {jnp.min(baseline_tgates_evals):.4f}')
 
-times_evals = jnp.array(baseline_times_evals)
-
+## Save the random evaluation data
 if use_gadgets:
     pickle.dump((configuration_evals, baseline_tgates_evals, baseline_times_evals), 
             open('eval-data-%d-%d-gadgets.p' % (num_eval_data,num_qubits), 'wb'))

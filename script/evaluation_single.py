@@ -38,7 +38,7 @@ def evaluation(configuration_evals, run_state, eval_type):
   return tcounts_eval
 
 ## Eval data filename
-eval_data_filename = 'eval-data-100-5-gadgets.p'
+eval_data_filename = 'eval-data-1000-5-gadgets.p'
 
 ## Model filename
 model_filename = 'runstate-single-5.p'
