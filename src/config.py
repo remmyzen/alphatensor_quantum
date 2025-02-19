@@ -61,7 +61,7 @@ class EnvironmentParams:
   """
   target_circuit_types: Sequence[tensors.CircuitType]
   target_circuit_probabilities: Sequence[float] | None = None
-
+  max_size: int = None
   max_num_moves: int = 250
   use_gadgets: bool = True
   num_past_factors_to_observe: int = 20
@@ -72,11 +72,16 @@ class EnvironmentParams:
 
   @functools.cached_property
   def max_tensor_size(self) -> int:
-    all_tensor_sizes = [
-        tensors.get_signature_tensor(circuit_type).shape[0]
-        for circuit_type in self.target_circuit_types
-    ]
-    return max(all_tensor_sizes)
+    ### Change to accomodate general agent
+    if self.max_size is None:
+      all_tensor_sizes = [
+          tensors.get_signature_tensor(circuit_type).shape[0]
+          for circuit_type in self.target_circuit_types
+      ]
+      return max(all_tensor_sizes)
+    else:
+      return self.max_size
+
 
 
 @dataclasses.dataclass(frozen=True, kw_only=True)

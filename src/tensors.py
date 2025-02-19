@@ -278,6 +278,9 @@ def get_signature_tensor(
   Returns:
     The (symmetric) target signature tensor, with entries in {0, 1}.
   """
-  if circuit_type not in _TENSORS_DICT:
-    raise ValueError(f'Unsupported circuit type: {circuit_type}')
-  return jnp.array(_TENSORS_DICT[circuit_type])
+  ## EDITED to accommodate random tensors 
+  if isinstance(circuit_type, np.ndarray):  
+    return jnp.array(circuit_type)
+  else:
+    return jnp.array(_TENSORS_DICT[circuit_type])
+    
